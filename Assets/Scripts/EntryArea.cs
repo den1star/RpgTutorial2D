@@ -14,6 +14,7 @@ public class EntryArea : MonoBehaviour
             PlayerController.instance.transform.position = this.transform.position;
 
         }
+        UIFade.instance.FadeFromBlack();
     }
 
     // Update is called once per frame
