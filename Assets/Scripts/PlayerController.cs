@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 bottomLeftLimit;
     private Vector3 topRightLimit;
 
+    public bool canMove = true;
+
     public static PlayerController instance;
     // Start is called before the first frame update
     void Start()
@@ -42,16 +44,21 @@ public class PlayerController : MonoBehaviour
         float hinput = Input.GetAxisRaw("Horizontal");
         float vinput = Input.GetAxisRaw("Vertical");
         float speed = moveSpeed * Time.deltaTime;
-        playerRB.velocity = new Vector2(hinput, vinput).normalized * speed;
-        playerAnimator.SetFloat("moveX", playerRB.velocity.x);
-        playerAnimator.SetFloat("moveY", playerRB.velocity.y);
 
-        if (hinput == 1 || vinput == 1 || hinput == -1 || vinput == -1)
+        if (canMove)
         {
-            playerAnimator.SetFloat("lastX", hinput);
-            playerAnimator.SetFloat("lastY", vinput);
+            playerRB.velocity = new Vector2(hinput, vinput).normalized * speed;
+
+            playerAnimator.SetFloat("moveX", playerRB.velocity.x);
+            playerAnimator.SetFloat("moveY", playerRB.velocity.y);
+
+            if (hinput == 1 || vinput == 1 || hinput == -1 || vinput == -1)
+            {
+                playerAnimator.SetFloat("lastX", hinput);
+                playerAnimator.SetFloat("lastY", vinput);
+            }
+            transform.position = new Vector3(Mathf.Clamp(transform.position.x, bottomLeftLimit.x, topRightLimit.x), Mathf.Clamp(transform.position.y, bottomLeftLimit.y, topRightLimit.y), transform.position.z);
         }
-        transform.position = new Vector3(Mathf.Clamp(transform.position.x, bottomLeftLimit.x, topRightLimit.x), Mathf.Clamp(transform.position.y, bottomLeftLimit.y, topRightLimit.y), transform.position.z);
     }
 
     public void SetBounds(Vector3 botLeft, Vector3 topRight)
